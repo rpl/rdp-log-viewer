@@ -1,6 +1,8 @@
 rdp-log-viewer
 ==============
 
+Status: **PROOF OF CONCEPT**
+
 This small webapp is an experimental viewer / editor for log files
 collected by its companion addon-sdk library:
 
@@ -24,3 +26,26 @@ This prototype is based on the following opensource projects:
 - [Bootstrap](https://github.com/twitter/boostrap)
 - [Lo-Dash](https://github.com/bestiejs/lodash)
 - [jQuery](https://github.com/jquery/jquery)
+
+Screenshots
+-----------
+
+### Fast theme
+
+This theme is really fast but doesn't indent json
+
+![Fast Theme Screenshot](screenshots/fast.png)
+
+### Moz theme
+
+This theme is slower than previous one, but it's indent json correctly
+and use a readable font (MozTT)
+
+![Moz Theme Screenshot](screenshots/moz.png)
+
+### Hand theme
+
+This theme is really slow, not very readable... but really fun :-)
+(this theme was already featured by the official js-sequence-diagrams build)
+
+![Hand Theme Screenshot](screenshots/hand.png)
