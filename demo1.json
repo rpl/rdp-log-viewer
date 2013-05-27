@@ -1,0 +1,50 @@
+[
+  {
+    "direction": "receive",
+    "packet": {
+      "from": "root",
+      "applicationType": "browser",
+      "traits": {}
+    }
+  },
+  {
+    "direction": "send",
+    "packet": {
+      "to": "root",
+      "type": "listTabs"
+    }
+  },
+  {
+    "direction": "receive",
+    "packet": {
+      "from": "root",
+      "selected": 0,
+      "tabs": [
+        {
+          "actor": "conn0.tab2",
+          "url": "chrome://prosthesis/content/shell.xul",
+          "consoleActor": "conn0.console8"
+        }
+      ],
+      "consoleActor": "conn0.console3",
+      "profilerActor": "conn0.profiler4",
+      "webappsActor": "conn0.webapps5",
+      "simulatorActor": "conn0.simulator6",
+      "simulatorWebappsActor": "conn0.simulatorWebapps7"
+    }
+  },
+  {
+    "direction": "send",
+    "packet": {
+      "to": "conn0.simulator6",
+      "type": "ping"
+    }
+  },
+  {
+    "direction": "receive",
+    "packet": {
+      "msg": "pong",
+      "from": "conn0.simulator6"
+    }
+  }
+]

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>RDPLoggerViewer</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="js/codemirror.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/lodash.min.js"></script>
+    <script src="js/raphael-min.js"></script>
+    <script src="js/codemirror.js"></script>
+
+    <script src="js/moz_300.font.js"></script>
+
+    <script src="js/sequence-diagram-min.js"></script>
+    <script src="js/viewer.js"></script>
+    <style>
+      .CodeMirror {
+        border: 1px solid #eee;
+        height: 100%;
+      }
+
+      .CodeMirror-scroll {
+        overflow-y: hidden;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body class="container-fluid">
+    <!-- NAVBAR -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <a class="brand" href="#" style="margin: 2px;">RDPLogViewer</a>
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          <li>
+            <form class="navbar-form pull-left">
+              <span class="navbar-text">Load RDP Log file: </span>
+              <input class="btn" type="file" id="input" style="margin: 2px">
+            </form>
+          </li>
+          <li class="divider-vertical"></li>
+          <li>
+            <form class="navbar-form pull-left" style="margin: 2px;">
+    	      <button class="btn btn-success" style="margin-right: 0.5em;"
+                      type="button" id="parse">Render</button>
+              <select id="theme" class="span1">
+                <option value="fast">Fast</option>
+                <option value="moz">Moz</option>
+                <option value="hand">Hand</option>
+              </select>
+    	      <a class="btn btn-warning" style="margin-right: 0.5em;"
+                      type="button" id="save">Save</a>
+            </form>
+          </li>
+          <li class="divider-vertical"></li>
+          <li>
+            <form class="navbar-form pull-left" style="margin: 2px;">
+    	      <button class="btn btn-info" style="margin-right: 0.5em;"
+                      type="button" id="load-demo">Load DEMO Trace Log</button>
+              <select id="demo" class="span2">
+                <option value="demo1">Demo1</option>
+              </select>
+            </form>
+          </li>
+        </ul>
+        <ul class="nav pull-right" style="margin-right: 4px;">
+          <li>
+            <form class="navbar-form form-inline pull-left">
+              <span class="navbar-text">Editor Mode:</span>
+              <div id="editor-mode" class="btn-group" style="margin: 2px;">
+                <button id="editor-hidden" class="btn">Hidden</button>
+                <button id="editor-json" class="btn">JSON</button>
+                <button id="editor-dsl" class="btn">DiagramDSL</button>
+              </div>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="row-fluid" style="margin-top: 3.4em;">
+      <div class="span12">
+        <div class="row-fluid">
+    	  <div class="span7" id="diagram">
+          </div>
+          <div class="span5" id="editor-container"
+               style="height: 50em; position: fixed; right: 10px;">
+            <textarea id="diagram-source"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- RENDERING Modal -->
+    <div id="renderingModal" class="modal hide fade" tabindex="-1" role="dialog"
+         aria-labelledby="renderingModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <h3 id="myModalLabel">Rendering Sequence Diagram...</h3>
+      </div>
+      <div class="modal-body">
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 40%;"></div>
+        </div>
+      </div>
+    </div>
+    <!-- RENDERING Modal -->
+    <div id="aboutModal" class="modal hide fade" tabindex="-1" role="dialog"
+         aria-labelledby="renderingModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <h3 id="myModalLabel">About</h3>
+      </div>
+      <div class="modal-body">
+        <p>
+          This small webapp is an experimental viewer / editor for log files
+          collected by its companion addon-sdk library:
+          <a href="https://github.com/rpl/rdp-logging">rdp-logging</a>
+        </p>
+        <p>
+          Using <b>rdp-logging</b> (or another equivalent tool) we can collect
+          <b>Mozilla Remote Debugger Procotol</b> exchanged messages into a
+          simple json format file, and then (using a viewer like this)
+          we can render it into a readable sequence diagram (a very simple UML Sequence Diagram)
+          and optionally tweak it using the embedded editor (e.g. to design a change
+          in the protocol).
+        </p>
+        <ul>
+          <li><a href="https://githun.com/rpl/rdp-log-viewer">RDPLogViewer Sources</a></li>
+        </ul>
+        <p>
+          This prototype is based on the following opensource projects:
+        </p>
+        <ul>
+          <li>
+            <a href="https://github.com/bramp/js-sequence-diagrams">
+              js-sequence-diagrams
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/DmitryBaranovskiy/raphael/">
+              Raphaël
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/marijnh/CodeMirror">
+              CodeMirror
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/twitter/boostrap">
+              Bootstrap
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/bestiejs/lodash">
+              Lo-Dash
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/jquery/jquery">
+              jQuery
+            </a>
+          </li>
+        </ul>
+        <div class="pull-right span2">
+          <label class="checkbox">
+            <input id="about-disabled" type="checkbox"> Don't show this about again
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" id="about-close" class="btn">Close</a>
+      </div>
+    </div>
+  </body>
+</html>
